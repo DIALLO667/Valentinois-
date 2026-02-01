@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For u my love</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background-color: pink;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    overflow: hidden;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.image {
+    width: 90%;
+    max-width: 400px;
+    margin-top: 30px;
+}
+
+.image img {
+    width: 100%;
+    border-radius: 15px;
+}
+
+h1 {
+    color: rgba(255, 0, 0, 0.85);
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    margin: 30px 10px;
+}
+
+.bouton {
+    position: relative;
+    margin-top: 30px;
+    height: 160px;
+    width: 100%;
+}
+
+/* TAILLE IDENTIQUE */
+button {
+    width: 140px;
+    height: 55px;
+    font-size: 1.4rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.1s linear, background-color 0.2s ease;
+}
+
+/* YES - FIXE À GAUCHE */
+.oui {
+    background-color: #17e35b;
+    color: white;
+    position: absolute;
+    left: calc(50% - 230px); /* Ajuste cette valeur pour le positionner où tu veux */
+    top: 50px;
+}
+
+.oui:hover {
+    transform: scale(1.3);
+    background-color: #07ab38;
+}
+
+/* NO — COMMENCE À DROITE */
+.non {
+    background-color: rgba(243, 21, 21, 0.9);
+    color: black;
+    position: absolute;
+    left: calc(50% + 90px); /* Ajuste cette valeur pour le positionner où tu veux */
+    top: 50px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="image">
+        <img src="img/9151721.jpg" alt="">
+    </div>
+</div>
+
+<h1>Would you be my Valentine ? 💘</h1>
+
+<div class="bouton" id="zone">
+    <button class="oui" onclick="goYes()">Yes</button>
+    <button class="non" id="noBtn">No</button>
+</div>
+
+<script>
+const noBtn = document.getElementById("noBtn");
+const zone = document.getElementById("zone");
+
+let x = 0;
+let y = 0;
+let activated = false;
+
+/* activation intelligente */
+function activateIfNeeded() {
+    if (!activated) {
+        const rect = noBtn.getBoundingClientRect();
+        const zoneRect = zone.getBoundingClientRect();
+
+        x = rect.left - zoneRect.left;
+        y = rect.top - zoneRect.top;
+
+        noBtn.style.left = x + "px";
+        noBtn.style.top = y + "px";
+
+        activated = true;
+    }
+}
+
+zone.addEventListener("mousemove", (e) => {
+    activateIfNeeded();
+
+    const btnRect = noBtn.getBoundingClientRect();
+    const zoneRect = zone.getBoundingClientRect();
+
+    const mouseX = e.clientX;
+    const mouseY = e.clientY;
+
+    const btnX = btnRect.left + btnRect.width / 2;
+    const btnY = btnRect.top + btnRect.height / 2;
+
+    const dx = mouseX - btnX;
+    const dy = mouseY - btnY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    const danger = 180;
+    const speed = 0.9;
+
+    if (distance < danger) {
+        x -= dx * speed * 0.04;
+        y -= dy * speed * 0.04;
+
+        const minX = 0;
+        const maxX = zone.clientWidth - btnRect.width;
+        const minY = 0;
+        const maxY = zone.clientHeight - btnRect.height;
+
+        x = Math.max(minX, Math.min(x, maxX));
+        y = Math.max(minY, Math.min(y, maxY));
+
+        noBtn.style.left = x + "px";
+        noBtn.style.top = y + "px";
+    }
+});
+
+/* impossible de rester dessus */
+noBtn.addEventListener("mouseenter", () => {
+    activateIfNeeded();
+
+    x = Math.random() * (zone.clientWidth - noBtn.offsetWidth);
+    y = Math.random() * (zone.clientHeight - noBtn.offsetHeight);
+
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+});
+
+function goYes() {
+    window.location.href = "yes.html";
+}
+</script>
+
+</body>
+</html>
